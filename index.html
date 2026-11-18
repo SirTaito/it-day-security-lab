@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -376,51 +376,51 @@
     <header>
         <div class="badge">IT-Day Live Security Lab</div>
         <h1>OSINT &amp; Passkey Challenge</h1>
-        <p class="subtitle">Can you crack Tom's accounts using public clues—and what happens when he switches to a Passkey?</p>
+        <p class="subtitle">Knackst du Toms Accounts anhand öffentlicher Infos – und was passiert, wenn er auf einen Passkey umstellt?</p>
     </header>
 
     <!-- Navigation Stepper -->
     <div class="stepper">
-        <div class="step active" id="tab-1" onclick="switchTab(1)">1. Easy (3m)</div>
-        <div class="step" id="tab-2" onclick="switchTab(2)">2. Hard (8m)</div>
-        <div class="step" id="tab-3" onclick="switchTab(3)">3. Passkey Shield</div>
+        <div class="step active" id="tab-1" onclick="switchTab(1)">1. Leicht (3m)</div>
+        <div class="step" id="tab-2" onclick="switchTab(2)">2. Schwer (8m)</div>
+        <div class="step" id="tab-3" onclick="switchTab(3)">3. Passkey-Schutz</div>
     </div>
 
     <!-- LEVEL 1: EASY -->
     <div class="card active" id="card-1">
         <div class="level-header">
             <span class="level-tag tag-easy">Level 1: Social Media Leak</span>
-            <span class="attempts-counter">Attempts: <strong id="attempts-1">0</strong></span>
+            <span class="attempts-counter">Versuche: <strong id="attempts-1">0</strong></span>
         </div>
 
         <div class="target-box">
-            <p><strong>Mission:</strong> Look at Tom's public Instagram profile shown on the projector. Combine his personal details to guess his personal email password.</p>
+            <p><strong>Mission:</strong> Schau dir Toms öffentliches Instagram-Profil vorne auf dem Beamer an. Kombiniere seine persönlichen Infos, um sein privates E-Mail-Passwort zu erraten.</p>
         </div>
 
         <form onsubmit="checkLevel1(event)">
             <div class="form-group">
-                <label>Target Email</label>
+                <label>Ziel-E-Mail</label>
                 <input type="text" value="tom.miller98@demo-mail.com" readonly>
             </div>
             <div class="form-group">
-                <label>Password</label>
+                <label>Passwort</label>
                 <div class="input-wrapper">
-                    <input type="password" id="pw-1" placeholder="Enter guessed password..." autocomplete="off">
-                    <button type="button" class="toggle-pw" onclick="toggleVisibility('pw-1', this)">Show</button>
+                    <input type="password" id="pw-1" placeholder="Erratenes Passwort eingeben..." autocomplete="off">
+                    <button type="button" class="toggle-pw" onclick="toggleVisibility('pw-1', this)">Anzeigen</button>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Attempt Login</button>
+            <button type="submit" class="btn btn-primary">Login versuchen</button>
         </form>
 
         <div id="feedback-1" class="alert"></div>
 
         <div class="hints-section">
-            <button type="button" class="btn btn-secondary" onclick="revealHint1()">Need a Hint?</button>
+            <button type="button" class="btn btn-secondary" onclick="revealHint1()">Hinweis benötigt?</button>
             <div id="hint-1-1" class="hint-item" style="margin-top: 0.6rem;">
-                <strong>Hint 1:</strong> Check his Instagram bio for his dog's name and his birth year.
+                <strong>Hinweis 1:</strong> Schau in seine Instagram-Bio nach dem Namen seines Hundes und seinem Geburtsjahr.
             </div>
             <div id="hint-1-2" class="hint-item">
-                <strong>Hint 2:</strong> Format is <code>[DogName][BirthYear]!</code> (Capital first letter + exclamation mark).
+                <strong>Hinweis 2:</strong> Das Muster lautet <code>[Hundename][Geburtsjahr]!</code> (Erster Buchstabe groß + Ausrufezeichen).
             </div>
         </div>
     </div>
@@ -428,41 +428,41 @@
     <!-- LEVEL 2: HARD -->
     <div class="card" id="card-2">
         <div class="level-header">
-            <span class="level-tag tag-hard">Level 2: Corporate Admin</span>
-            <span class="attempts-counter">Attempts: <strong id="attempts-2">0</strong></span>
+            <span class="level-tag tag-hard">Level 2: Firmen-Admin</span>
+            <span class="attempts-counter">Versuche: <strong id="attempts-2">0</strong></span>
         </div>
 
         <div class="target-box">
-            <p><strong>Mission:</strong> Tom uses a stricter password policy for his work account at <strong>NordicTech</strong>. Check his LinkedIn &amp; company profile on the screen to crack his admin login.</p>
+            <p><strong>Mission:</strong> Für seinen Arbeits-Account bei <strong>NordicTech</strong> gilt eine strengere Passwort-Richtlinie. Nutze die Infos aus seinem LinkedIn- &amp; Firmenprofil vorne am Beamer.</p>
         </div>
 
         <form onsubmit="checkLevel2(event)">
             <div class="form-group">
-                <label>Corporate Login</label>
+                <label>Firmen-Login</label>
                 <input type="text" value="t.miller@nordic-tech.io" readonly>
             </div>
             <div class="form-group">
-                <label>Admin Password</label>
+                <label>Admin-Passwort</label>
                 <div class="input-wrapper">
-                    <input type="password" id="pw-2" placeholder="Enter corporate password..." autocomplete="off">
-                    <button type="button" class="toggle-pw" onclick="toggleVisibility('pw-2', this)">Show</button>
+                    <input type="password" id="pw-2" placeholder="Firmen-Passwort eingeben..." autocomplete="off">
+                    <button type="button" class="toggle-pw" onclick="toggleVisibility('pw-2', this)">Anzeigen</button>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Attempt Admin Login</button>
+            <button type="submit" class="btn btn-primary">Admin-Login versuchen</button>
         </form>
 
         <div id="feedback-2" class="alert"></div>
 
         <div class="hints-section">
-            <button type="button" class="btn btn-secondary" onclick="revealHint2()">Reveal Next Hint (<span id="hint2-count">0</span>/3)</button>
+            <button type="button" class="btn btn-secondary" onclick="revealHint2()">Nächsten Hinweis aufdecken (<span id="hint2-count">0</span>/3)</button>
             <div id="hint-2-1" class="hint-item" style="margin-top: 0.6rem;">
-                <strong>Hint 1 (OSINT):</strong> Look at his LinkedIn location (city) and the year he joined NordicTech.
+                <strong>Hinweis 1 (OSINT):</strong> Schau nach seinem Standort (Stadt) auf LinkedIn und dem Jahr, in dem er bei NordicTech angefangen hat.
             </div>
             <div id="hint-2-2" class="hint-item">
-                <strong>Hint 2 (Leetspeak):</strong> Tom replaces the first lowercase vowel in the city name with <code>@</code>.
+                <strong>Hinweis 2 (Leetspeak):</strong> Tom ersetzt den ersten kleinen Vokal im Stadtnamen durch ein <code>@</code>.
             </div>
             <div id="hint-2-3" class="hint-item">
-                <strong>Hint 3 (Policy Rule):</strong> Structure is <code>[City with @][JoinYear]#</code> (12 characters total).
+                <strong>Hinweis 3 (Richtlinie):</strong> Der Aufbau lautet <code>[Stadt mit @][Eintrittsjahr]#</code> (insgesamt 12 Zeichen).
             </div>
         </div>
     </div>
@@ -470,38 +470,38 @@
     <!-- LEVEL 3: PASSKEY SOLUTION -->
     <div class="card" id="card-3">
         <div class="level-header">
-            <span class="level-tag tag-secure">Level 3: Passkey Protection</span>
+            <span class="level-tag tag-secure">Level 3: Passkey-Schutz</span>
             <span class="attempts-counter">FIDO2 / WebAuthn</span>
         </div>
 
         <div class="target-box">
-            <p><strong>Account Upgraded:</strong> Tom removed his password completely and enabled a <strong>Passkey</strong>. Even though you know his birthday, dog, city, and email, there is no password left to guess.</p>
+            <p><strong>Account umgestellt:</strong> Tom hat sein Passwort komplett gelöscht und einen <strong>Passkey</strong> aktiviert. Obwohl du seinen Geburtstag, seinen Hund, seine Stadt und seine E-Mail kennst, gibt es kein Passwort mehr zum Erraten.</p>
         </div>
 
         <div class="form-group">
-            <label>Protected Account</label>
+            <label>Geschützter Account</label>
             <input type="text" value="t.miller@nordic-tech.io" readonly>
         </div>
 
         <button type="button" class="btn btn-primary" onclick="testPasskeyDemo()">
-            Sign in with Passkey (Test on Your Device)
+            Mit Passkey anmelden (Auf eigenem Gerät testen)
         </button>
 
         <div id="feedback-3" class="alert"></div>
 
         <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-            <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Your Security Takeaway Checklist</h3>
+            <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Deine Security-Checkliste zum Mitnehmen</h3>
             <ul class="checklist">
-                <li><strong>1. Ditch personal clues:</strong> Never use pets, birthdays, cities, or years (<code>2026!</code>) in passwords.</li>
-                <li><strong>2. Enable Passkeys first:</strong> Activate Passkeys on Google, Apple, Microsoft &amp; Amazon—only your physical device can unlock your account.</li>
-                <li><strong>3. Use a Password Manager:</strong> Where Passkeys aren't supported yet, generate <strong>16+ random characters</strong> (1 account = 1 unique password).</li>
-                <li><strong>4. Use a 4-Word Passphrase:</strong> For your Master Password, combine 4 random words (e.g., <code>Coffee-Beaver-Table-Cloud!</code>).</li>
+                <li><strong>1. Keine privaten Hinweise:</strong> Nutze niemals Haustiere, Geburtstage, Städte oder Jahreszahlen (<code>2026!</code>) in Passwörtern.</li>
+                <li><strong>2. Zuerst Passkeys aktivieren:</strong> Richte Passkeys bei Google, Apple, Microsoft &amp; Amazon ein – nur dein physisches Gerät kann den Account entsperren.</li>
+                <li><strong>3. Password Manager nutzen:</strong> Wo es noch keine Passkeys gibt, generiere <strong>16+ zufällige Zeichen</strong> (1 Account = 1 einzigartiges Passwort).</li>
+                <li><strong>4. Die 4-Wort-Passphrase:</strong> Für dein Master-Passwort kombiniere 4 zufällige Wörter (z. B. <code>Kaffee-Biber-Tisch-Wolke!</code>).</li>
             </ul>
         </div>
     </div>
 
     <footer>
-        100% Client-Side Security Training Demo &bull; No passwords are transmitted or stored.
+        100 % lokale Security-Training-Demo &bull; Es werden keine Passwörter übertragen oder gespeichert.
     </footer>
 </div>
 
@@ -511,7 +511,6 @@
     let hint1Step = 0;
     let hint2Step = 0;
 
-    // SHA-256 Helper so plain-text answers aren't immediately obvious in quick view
     async function sha256(message) {
         const msgBuffer = new TextEncoder().encode(message);
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -519,7 +518,6 @@
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Precomputed SHA-256 hashes for:
     // Level 1: "Buddy1998!"
     // Level 2: "H@mburg2026#"
     const HASH_LEVEL_1 = "e55b58a9e33862f254f74867879b4eb35d6e10539633e77c90d814f3d67a1e18";
@@ -536,10 +534,10 @@
         const input = document.getElementById(inputId);
         if (input.type === 'password') {
             input.type = 'text';
-            btn.textContent = 'Hide';
+            btn.textContent = 'Verbergen';
         } else {
             input.type = 'password';
-            btn.textContent = 'Show';
+            btn.textContent = 'Anzeigen';
         }
     }
 
@@ -573,14 +571,14 @@
             document.getElementById('tab-1').classList.add('completed');
             fb.className = 'alert hacked';
             fb.innerHTML = `
-                <strong>ACCOUNT COMPROMISED!</strong><br>
-                You cracked Tom's personal password (<code>Buddy1998!</code>) in <strong>${attempts1}</strong> attempt(s).<br>
-                <em>Why?</em> Combining a pet's name + birth year + <code>!</code> is one of the most common human patterns.<br>
-                <button type="button" class="btn btn-success" onclick="switchTab(2)">Proceed to Level 2 (Hard) &rarr;</button>
+                <strong>ACCOUNT GEHACKT!</strong><br>
+                Du hast Toms privates Passwort (<code>Buddy1998!</code>) in <strong>${attempts1}</strong> Versuch(en) geknackt.<br>
+                <em>Warum?</em> Haustiername + Geburtsjahr + <code>!</code> ist eines der häufigsten menschlichen Muster.<br>
+                <button type="button" class="btn btn-success" onclick="switchTab(2)">Weiter zu Level 2 (Schwer) &rarr;</button>
             `;
         } else {
             fb.className = 'alert error';
-            fb.innerHTML = `<strong>Access Denied.</strong> Wrong password. Check Tom's Instagram clues again!`;
+            fb.innerHTML = `<strong>Zugriff verweigert.</strong> Falsches Passwort. Schau dir Toms Instagram-Hinweise noch einmal genau an!`;
         }
     }
 
@@ -599,20 +597,19 @@
             document.getElementById('tab-2').classList.add('completed');
             fb.className = 'alert hacked';
             fb.innerHTML = `
-                <strong>CORPORATE ADMIN ACCOUNT HACKED!</strong><br>
-                Even though <code>H@mburg2026#</code> looks "complex" (12 chars, uppercase, symbol, numbers), OSINT + simple Leetspeak rules broke it in <strong>${attempts2}</strong> attempt(s)!<br>
-                <button type="button" class="btn btn-success" onclick="switchTab(3)">See How Passkeys Stop This &rarr;</button>
+                <strong>FIRMEN-ADMIN-ACCOUNT GEHACKT!</strong><br>
+                Obwohl <code>H@mburg2026#</code> „komplex“ aussieht (12 Zeichen, Großbuchstabe, Sonderzeichen, Zahlen), haben OSINT + einfache Leetspeak-Regeln es in <strong>${attempts2}</strong> Versuch(en) geknackt!<br>
+                <button type="button" class="btn btn-success" onclick="switchTab(3)">Jetzt sehen, wie Passkeys das stoppen &rarr;</button>
             `;
         } else {
             fb.className = 'alert error';
-            fb.innerHTML = `<strong>Access Denied.</strong> Not quite! Look closely at his LinkedIn profile or unlock a hint below.`;
+            fb.innerHTML = `<strong>Zugriff verweigert.</strong> Noch nicht ganz! Schau auf sein LinkedIn-Profil oder decke unten einen Hinweis auf.`;
         }
     }
 
     async function testPasskeyDemo() {
         const fb = document.getElementById('feedback-3');
 
-        // Trigger real WebAuthn biometric prompt if supported over HTTPS/localhost
         if (window.PublicKeyCredential && navigator.credentials) {
             try {
                 const challenge = new Uint8Array(32);
@@ -641,21 +638,19 @@
                 document.getElementById('tab-3').classList.add('completed');
                 fb.className = 'alert safe';
                 fb.innerHTML = `
-                    <strong>PASSKEY VERIFIED ON YOUR DEVICE!</strong><br>
-                    Your device just created a hardware-backed cryptographic key using Face ID / Touch ID / Windows Hello.<br><br>
-                    <strong>Why attackers fail now:</strong><br>
-                    &bull; There is <strong>no password</strong> left to guess or leak.<br>
-                    &bull; The Private Key never leaves your device.<br>
-                    &bull; Even with all of Tom's social media data, an attacker has <strong>0% chance</strong> of logging in.
+                    <strong>PASSKEY AUF DEINEM GERÄT BESTÄTIGT!</strong><br>
+                    Dein Gerät hat gerade per Face ID / Touch ID / Windows Hello einen hardwaregeschützten kryptografischen Schlüssel erstellt.<br><br>
+                    <strong>Warum Angreifer jetzt scheitern:</strong><br>
+                    &bull; Es gibt <strong>kein Passwort</strong> mehr, das erraten oder geleakt werden kann.<br>
+                    &bull; Der Private Key verlässt niemals dein Gerät.<br>
+                    &bull; Selbst mit allen Social-Media-Daten von Tom hat ein Angreifer <strong>0 % Chance</strong>.
                 `;
                 return;
             } catch (err) {
-                // Fallback message if user cancels biometric prompt or opens via file:// instead of HTTPS
                 fb.className = 'alert safe';
                 fb.innerHTML = `
-                    <strong>PASSKEY BLOCKED UNAUTHORIZED ACCESS!</strong><br>
-                    Without the registered physical device (or if the biometric check is canceled), login is <strong>100% impossible</strong>.<br><br>
-                    <em>Note: To trigger the live Face ID / Fingerprint prompt on mobile, host this file over HTTPS (e.g., GitHub Pages).</em>
+                    <strong>UNBEFUGTER ZUGRIFF BLOCKIERT!</strong><br>
+                    Ohne das registrierte physische Gerät (oder wenn die biometrische Prüfung abgebrochen wird) ist ein Login zu <strong>100 % unmöglich</strong>.
                 `;
                 return;
             }
@@ -663,8 +658,8 @@
 
         fb.className = 'alert safe';
         fb.innerHTML = `
-            <strong>PASSKEY PROTECTION ACTIVE!</strong><br>
-            No password exists for this account. Only the physical owner's device can sign the login challenge.
+            <strong>PASSKEY-SCHUTZ AKTIV!</strong><br>
+            Für diesen Account existiert kein Passwort mehr. Nur das physische Gerät des Besitzers kann die Anmeldung signieren.
         `;
     }
 </script>
