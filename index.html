@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT-Day Security Challenge | OSINT & Passkey Demo</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-blue-hover: #2563eb;
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 540px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        /* Progress Bar */
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            background: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.5rem 0.25rem;
+            border-radius: 8px;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .step.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .step.completed {
+            color: var(--success);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.25rem;
+            display: none;
+        }
+
+        .card.active {
+            display: block;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .level-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .tag-easy {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .tag-hard {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .tag-secure {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .attempts-counter {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Target Box */
+        .target-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .target-box p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        .target-box strong {
+            color: var(--text-main);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem 2.75rem 0.75rem 0.9rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--accent-blue);
+        }
+
+        input[readonly] {
+            color: var(--text-muted);
+            background: rgba(15, 23, 42, 0.4);
+            cursor: not-allowed;
+        }
+
+        .toggle-pw {
+            position: absolute;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 0.25rem;
+        }
+
+        .toggle-pw:hover {
+            color: var(--text-main);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-blue-hover);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #064e3b;
+            margin-top: 0.75rem;
+        }
+
+        .btn-success:hover {
+            background: #34d399;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            padding: 0.65rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-muted);
+            color: var(--text-main);
+        }
+
+        /* Feedback Alerts */
+        .alert {
+            margin-top: 1rem;
+            padding: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            display: none;
+        }
+
+        .alert.error {
+            display: block;
+            background: var(--danger-bg);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+
+        .alert.hacked {
+            display: block;
+            background: var(--danger-bg);
+            border: 1px solid var(--danger);
+            color: #fecaca;
+        }
+
+        .alert.safe {
+            display: block;
+            background: var(--success-bg);
+            border: 1px solid var(--success);
+            color: #a7f3d0;
+        }
+
+        /* Hints Accordion */
+        .hints-section {
+            margin-top: 1.25rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        .hint-item {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.65rem 0.85rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            display: none;
+        }
+
+        .hint-item.visible {
+            display: block;
+        }
+
+        /* Takeaway Box */
+        .checklist {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .checklist li {
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.88rem;
+            line-height: 1.4;
+            color: #e2e8f0;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist li strong {
+            color: #60a5fa;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="badge">IT-Day Live Security Lab</div>
+        <h1>OSINT &amp; Passkey Challenge</h1>
+        <p class="subtitle">Can you crack Tom's accounts using public clues—and what happens when he switches to a Passkey?</p>
+    </header>
+
+    <!-- Navigation Stepper -->
+    <div class="stepper">
+        <div class="step active" id="tab-1" onclick="switchTab(1)">1. Easy (3m)</div>
+        <div class="step" id="tab-2" onclick="switchTab(2)">2. Hard (8m)</div>
+        <div class="step" id="tab-3" onclick="switchTab(3)">3. Passkey Shield</div>
+    </div>
+
+    <!-- LEVEL 1: EASY -->
+    <div class="card active" id="card-1">
+        <div class="level-header">
+            <span class="level-tag tag-easy">Level 1: Social Media Leak</span>
+            <span class="attempts-counter">Attempts: <strong id="attempts-1">0</strong></span>
+        </div>
+
+        <div class="target-box">
+            <p><strong>Mission:</strong> Look at Tom's public Instagram profile shown on the projector. Combine his personal details to guess his personal email password.</p>
+        </div>
+
+        <form onsubmit="checkLevel1(event)">
+            <div class="form-group">
+                <label>Target Email</label>
+                <input type="text" value="tom.miller98@demo-mail.com" readonly>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="pw-1" placeholder="Enter guessed password..." autocomplete="off">
+                    <button type="button" class="toggle-pw" onclick="toggleVisibility('pw-1', this)">Show</button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Attempt Login</button>
+        </form>
+
+        <div id="feedback-1" class="alert"></div>
+
+        <div class="hints-section">
+            <button type="button" class="btn btn-secondary" onclick="revealHint1()">Need a Hint?</button>
+            <div id="hint-1-1" class="hint-item" style="margin-top: 0.6rem;">
+                <strong>Hint 1:</strong> Check his Instagram bio for his dog's name and his birth year.
+            </div>
+            <div id="hint-1-2" class="hint-item">
+                <strong>Hint 2:</strong> Format is <code>[DogName][BirthYear]!</code> (Capital first letter + exclamation mark).
+            </div>
+        </div>
+    </div>
+
+    <!-- LEVEL 2: HARD -->
+    <div class="card" id="card-2">
+        <div class="level-header">
+            <span class="level-tag tag-hard">Level 2: Corporate Admin</span>
+            <span class="attempts-counter">Attempts: <strong id="attempts-2">0</strong></span>
+        </div>
+
+        <div class="target-box">
+            <p><strong>Mission:</strong> Tom uses a stricter password policy for his work account at <strong>NordicTech</strong>. Check his LinkedIn &amp; company profile on the screen to crack his admin login.</p>
+        </div>
+
+        <form onsubmit="checkLevel2(event)">
+            <div class="form-group">
+                <label>Corporate Login</label>
+                <input type="text" value="t.miller@nordic-tech.io" readonly>
+            </div>
+            <div class="form-group">
+                <label>Admin Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="pw-2" placeholder="Enter corporate password..." autocomplete="off">
+                    <button type="button" class="toggle-pw" onclick="toggleVisibility('pw-2', this)">Show</button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Attempt Admin Login</button>
+        </form>
+
+        <div id="feedback-2" class="alert"></div>
+
+        <div class="hints-section">
+            <button type="button" class="btn btn-secondary" onclick="revealHint2()">Reveal Next Hint (<span id="hint2-count">0</span>/3)</button>
+            <div id="hint-2-1" class="hint-item" style="margin-top: 0.6rem;">
+                <strong>Hint 1 (OSINT):</strong> Look at his LinkedIn location (city) and the year he joined NordicTech.
+            </div>
+            <div id="hint-2-2" class="hint-item">
+                <strong>Hint 2 (Leetspeak):</strong> Tom replaces the first lowercase vowel in the city name with <code>@</code>.
+            </div>
+            <div id="hint-2-3" class="hint-item">
+                <strong>Hint 3 (Policy Rule):</strong> Structure is <code>[City with @][JoinYear]#</code> (12 characters total).
+            </div>
+        </div>
+    </div>
+
+    <!-- LEVEL 3: PASSKEY SOLUTION -->
+    <div class="card" id="card-3">
+        <div class="level-header">
+            <span class="level-tag tag-secure">Level 3: Passkey Protection</span>
+            <span class="attempts-counter">FIDO2 / WebAuthn</span>
+        </div>
+
+        <div class="target-box">
+            <p><strong>Account Upgraded:</strong> Tom removed his password completely and enabled a <strong>Passkey</strong>. Even though you know his birthday, dog, city, and email, there is no password left to guess.</p>
+        </div>
+
+        <div class="form-group">
+            <label>Protected Account</label>
+            <input type="text" value="t.miller@nordic-tech.io" readonly>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="testPasskeyDemo()">
+            Sign in with Passkey (Test on Your Device)
+        </button>
+
+        <div id="feedback-3" class="alert"></div>
+
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+            <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Your Security Takeaway Checklist</h3>
+            <ul class="checklist">
+                <li><strong>1. Ditch personal clues:</strong> Never use pets, birthdays, cities, or years (<code>2026!</code>) in passwords.</li>
+                <li><strong>2. Enable Passkeys first:</strong> Activate Passkeys on Google, Apple, Microsoft &amp; Amazon—only your physical device can unlock your account.</li>
+                <li><strong>3. Use a Password Manager:</strong> Where Passkeys aren't supported yet, generate <strong>16+ random characters</strong> (1 account = 1 unique password).</li>
+                <li><strong>4. Use a 4-Word Passphrase:</strong> For your Master Password, combine 4 random words (e.g., <code>Coffee-Beaver-Table-Cloud!</code>).</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        100% Client-Side Security Training Demo &bull; No passwords are transmitted or stored.
+    </footer>
+</div>
+
+<script>
+    let attempts1 = 0;
+    let attempts2 = 0;
+    let hint1Step = 0;
+    let hint2Step = 0;
+
+    // SHA-256 Helper so plain-text answers aren't immediately obvious in quick view
+    async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Precomputed SHA-256 hashes for:
+    // Level 1: "Buddy1998!"
+    // Level 2: "H@mburg2026#"
+    const HASH_LEVEL_1 = "e55b58a9e33862f254f74867879b4eb35d6e10539633e77c90d814f3d67a1e18";
+    const HASH_LEVEL_2 = "72f5f24596882962f5a988c07a495932b51343a62095f3c864e78a9c5a976985";
+
+    function switchTab(step) {
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.card').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + step).classList.add('active');
+        document.getElementById('card-' + step).classList.add('active');
+    }
+
+    function toggleVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = 'Hide';
+        } else {
+            input.type = 'password';
+            btn.textContent = 'Show';
+        }
+    }
+
+    function revealHint1() {
+        hint1Step++;
+        if (hint1Step <= 2) {
+            document.getElementById('hint-1-' + hint1Step).classList.add('visible');
+        }
+    }
+
+    function revealHint2() {
+        if (hint2Step < 3) {
+            hint2Step++;
+            document.getElementById('hint-2-' + hint2Step).classList.add('visible');
+            document.getElementById('hint2-count').textContent = hint2Step;
+        }
+    }
+
+    async function checkLevel1(e) {
+        e.preventDefault();
+        const input = document.getElementById('pw-1').value.trim();
+        if (!input) return;
+
+        attempts1++;
+        document.getElementById('attempts-1').textContent = attempts1;
+
+        const hashed = await sha256(input);
+        const fb = document.getElementById('feedback-1');
+
+        if (hashed === HASH_LEVEL_1 || input === "Buddy1998!") {
+            document.getElementById('tab-1').classList.add('completed');
+            fb.className = 'alert hacked';
+            fb.innerHTML = `
+                <strong>ACCOUNT COMPROMISED!</strong><br>
+                You cracked Tom's personal password (<code>Buddy1998!</code>) in <strong>${attempts1}</strong> attempt(s).<br>
+                <em>Why?</em> Combining a pet's name + birth year + <code>!</code> is one of the most common human patterns.<br>
+                <button type="button" class="btn btn-success" onclick="switchTab(2)">Proceed to Level 2 (Hard) &rarr;</button>
+            `;
+        } else {
+            fb.className = 'alert error';
+            fb.innerHTML = `<strong>Access Denied.</strong> Wrong password. Check Tom's Instagram clues again!`;
+        }
+    }
+
+    async function checkLevel2(e) {
+        e.preventDefault();
+        const input = document.getElementById('pw-2').value.trim();
+        if (!input) return;
+
+        attempts2++;
+        document.getElementById('attempts-2').textContent = attempts2;
+
+        const hashed = await sha256(input);
+        const fb = document.getElementById('feedback-2');
+
+        if (hashed === HASH_LEVEL_2 || input === "H@mburg2026#") {
+            document.getElementById('tab-2').classList.add('completed');
+            fb.className = 'alert hacked';
+            fb.innerHTML = `
+                <strong>CORPORATE ADMIN ACCOUNT HACKED!</strong><br>
+                Even though <code>H@mburg2026#</code> looks "complex" (12 chars, uppercase, symbol, numbers), OSINT + simple Leetspeak rules broke it in <strong>${attempts2}</strong> attempt(s)!<br>
+                <button type="button" class="btn btn-success" onclick="switchTab(3)">See How Passkeys Stop This &rarr;</button>
+            `;
+        } else {
+            fb.className = 'alert error';
+            fb.innerHTML = `<strong>Access Denied.</strong> Not quite! Look closely at his LinkedIn profile or unlock a hint below.`;
+        }
+    }
+
+    async function testPasskeyDemo() {
+        const fb = document.getElementById('feedback-3');
+
+        // Trigger real WebAuthn biometric prompt if supported over HTTPS/localhost
+        if (window.PublicKeyCredential && navigator.credentials) {
+            try {
+                const challenge = new Uint8Array(32);
+                window.crypto.getRandomValues(challenge);
+                const userId = new Uint8Array(16);
+                window.crypto.getRandomValues(userId);
+
+                await navigator.credentials.create({
+                    publicKey: {
+                        challenge: challenge,
+                        rp: { name: "NordicTech IT-Day Demo" },
+                        user: {
+                            id: userId,
+                            name: "t.miller@nordic-tech.io",
+                            displayName: "Tom Miller"
+                        },
+                        pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
+                        authenticatorSelection: {
+                            authenticatorAttachment: "platform",
+                            userVerification: "required"
+                        },
+                        timeout: 30000
+                    }
+                });
+
+                document.getElementById('tab-3').classList.add('completed');
+                fb.className = 'alert safe';
+                fb.innerHTML = `
+                    <strong>PASSKEY VERIFIED ON YOUR DEVICE!</strong><br>
+                    Your device just created a hardware-backed cryptographic key using Face ID / Touch ID / Windows Hello.<br><br>
+                    <strong>Why attackers fail now:</strong><br>
+                    &bull; There is <strong>no password</strong> left to guess or leak.<br>
+                    &bull; The Private Key never leaves your device.<br>
+                    &bull; Even with all of Tom's social media data, an attacker has <strong>0% chance</strong> of logging in.
+                `;
+                return;
+            } catch (err) {
+                // Fallback message if user cancels biometric prompt or opens via file:// instead of HTTPS
+                fb.className = 'alert safe';
+                fb.innerHTML = `
+                    <strong>PASSKEY BLOCKED UNAUTHORIZED ACCESS!</strong><br>
+                    Without the registered physical device (or if the biometric check is canceled), login is <strong>100% impossible</strong>.<br><br>
+                    <em>Note: To trigger the live Face ID / Fingerprint prompt on mobile, host this file over HTTPS (e.g., GitHub Pages).</em>
+                `;
+                return;
+            }
+        }
+
+        fb.className = 'alert safe';
+        fb.innerHTML = `
+            <strong>PASSKEY PROTECTION ACTIVE!</strong><br>
+            No password exists for this account. Only the physical owner's device can sign the login challenge.
+        `;
+    }
+</script>
+
+</body>
+</html>
